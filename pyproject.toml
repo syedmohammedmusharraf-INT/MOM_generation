@@ -1,0 +1,21 @@
+[project]
+name = "mom-generation"
+version = "0.1.0"
+description = "CPU-optimized Audio Stack"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+   "google-api-python-client>=2.190.0",
+   "google-auth-oauthlib>=1.2.4",
+   "streamlit>=1.54.0",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+torchaudio = { index = "pytorch-cpu" }
