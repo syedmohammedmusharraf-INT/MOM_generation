@@ -7,32 +7,49 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
+from google.oauth2.credentials import Credentials
+
 # --- CONFIGURATION ---
 DRIVE_FOLDER_ID = "15uIcHh_Ku-_0eS4GONR4-asIdeCdbtLO" 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
-# --- GOOGLE DRIVE FUNCTIONS (Unchanged) ---
+# --- GOOGLE DRIVE FUNCTIONS ---
 def get_drive_service():
-    """Authenticates using your personal Google Account."""
+    """Authenticates using Streamlit Secrets or manual local flow."""
     creds = None
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-            
+    
+    # 1. Try to load from Streamlit Secrets (for Cloud deployment)
+    if "gcp_service_account" in st.secrets:
+        # Note: If using a Service Account, use service_account.Credentials.from_service_account_info
+        # However, the user is currently using a personal account (OAuth2).
+        pass
+
+    # 2. Try to load saved OAuth2 token from Secrets
+    if "google_auth" in st.secrets:
+        auth_info = st.secrets["google_auth"]
+        creds = Credentials.from_authorized_user_info(auth_info, SCOPES)
+
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            if not os.path.exists('client_secret.json'):
-                st.error("❌ Missing 'client_secret.json'.")
+            # Check for client configuration in Secrets
+            if "client_config" not in st.secrets:
+                st.error("❌ Missing 'client_config' in Streamlit Secrets.")
+                st.info("Please add your Google OAuth2 credentials to Streamlit Secrets.")
                 return None
-            flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES)
+            
+            # Manual local server flow (only works locally)
+            client_config = st.secrets["client_config"]
+            flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
             creds = flow.run_local_server(port=0)
             
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
+            # Output the token info so the user can save it to secrets
+            st.warning("⚠️ New token generated. To avoid re-authenticating, copy this to your Streamlit Secrets under [google_auth]:")
+            st.code(creds.to_json())
 
     return build('drive', 'v3', credentials=creds)
+
 
 def upload_to_personal_drive(filepath, filename):
     service = get_drive_service()
