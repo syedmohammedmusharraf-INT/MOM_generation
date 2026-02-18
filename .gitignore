@@ -9,5 +9,5 @@ wheels/
 # Virtual environments
 .venv
 client_secret.json
-token.pickle    
-run.py
+token.pickle
+.streamlit/
