@@ -1,0 +1,10 @@
+.git
+__pycache__
+*.pyc
+.venv
+.streamlit/secrets.toml
+client_secret.json
+token.pickle
+*.mp3
+*.wav
+node_modules
