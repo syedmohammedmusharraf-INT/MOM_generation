@@ -32,7 +32,7 @@ export default function AudioVisualizer({ stream, isRecording }: AudioVisualizer
         const H = canvas.height;
 
         ctx.clearRect(0, 0, W, H);
-        ctx.fillStyle = '#0d0d10';
+        ctx.fillStyle = '#fdf9ee';
         ctx.fillRect(0, 0, W, H);
 
         const barCount = 60;
@@ -41,7 +41,7 @@ export default function AudioVisualizer({ stream, isRecording }: AudioVisualizer
         let x = 0;
         for (let i = 0; i < barCount; i++) {
             const h = 2 + Math.sin(i * 0.45) * 1.5;
-            ctx.fillStyle = 'rgba(74, 74, 85, 0.6)';
+            ctx.fillStyle = 'rgba(212, 160, 32, 0.18)';
             ctx.fillRect(x, H - h, barW, h);
             x += barW + gap;
         }
@@ -79,7 +79,7 @@ export default function AudioVisualizer({ stream, isRecording }: AudioVisualizer
             const H = canvas.height;
 
             // Semi-transparent fill for motion blur trail
-            ctx.fillStyle = 'rgba(7, 7, 9, 0.5)';
+            ctx.fillStyle = 'rgba(253, 249, 238, 0.55)';
             ctx.fillRect(0, 0, W, H);
 
             const barCount = bufferLength;
@@ -92,18 +92,18 @@ export default function AudioVisualizer({ stream, isRecording }: AudioVisualizer
                 const barH = Math.max(2, value * H * 0.90);
 
                 // Hue: 240 (indigo) → 280 (violet) → 320 (pink) as volume rises
-                const hue = 240 + value * 80;
-                const sat = 70 + value * 30;
-                const lit = 35 + value * 40;
+                const hue = 35 + value * 15;
+                const sat = 60 + value * 30;
+                const lit = 45 + value * 25;
 
                 // Shadow glow on hot bars
-                ctx.shadowBlur = value > 0.5 ? 8 + value * 16 : 0;
-                ctx.shadowColor = value > 0.5 ? `hsl(${hue}, ${sat}%, ${lit + 25}%)` : 'transparent';
+                ctx.shadowBlur = value > 0.5 ? 6 + value * 12 : 0;
+                ctx.shadowColor = value > 0.5 ? `hsla(${hue}, ${sat}%, ${lit + 15}%, 0.5)` : 'transparent';
 
                 // Gradient: bright top, darker bottom
                 const grad = ctx.createLinearGradient(0, H - barH, 0, H);
                 grad.addColorStop(0, `hsl(${hue}, ${sat}%, ${lit}%)`);
-                grad.addColorStop(1, `hsl(${hue + 15}, ${sat - 15}%, ${Math.max(5, lit - 20)}%)`);
+                grad.addColorStop(1, `hsl(${hue + 10}, ${sat - 10}%, ${Math.max(15, lit - 15)}%)`);
 
                 ctx.fillStyle = grad;
                 ctx.fillRect(x, H - barH, barW, barH);
@@ -111,7 +111,7 @@ export default function AudioVisualizer({ stream, isRecording }: AudioVisualizer
                 // Bright 2px cap at the top of each bar
                 if (barH > 4) {
                     ctx.shadowBlur = 0;
-                    ctx.fillStyle = `hsla(${hue - 10}, 100%, 88%, ${value * 0.85})`;
+                    ctx.fillStyle = `hsla(${hue - 10}, 90%, 70%, ${value * 0.75})`;
                     ctx.fillRect(x, H - barH - 2, barW, 2);
                 }
 
