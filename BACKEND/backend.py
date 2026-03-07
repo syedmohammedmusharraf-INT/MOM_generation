@@ -13,7 +13,7 @@ from bson import ObjectId
 
 load_dotenv()
 
-app = FastAPI(title="MOM api")
+app = FastAPI(title="Meetmind api")
 
 app.add_middleware(
     CORSMiddleware,
