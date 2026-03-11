@@ -17,6 +17,7 @@ export interface MeetingDetails {
   attendees: string;
   context: string;
   meetingDate: string;
+  numberOfSpeakers: number;
 }
 
 interface DetailsPageProps {
@@ -25,11 +26,12 @@ interface DetailsPageProps {
 }
 
 export default function DetailsPage({ audioMeta, onSubmit }: DetailsPageProps) {
-  const [attendees, setAttendees]     = useState('');
-  const [context, setContext]         = useState('');
+  const [attendees, setAttendees] = useState('');
+  const [context, setContext] = useState('');
   const [meetingDate, setMeetingDate] = useState(localDatetimeValue());
-  const [saving, setSaving]           = useState(false);
-  const [saveError, setSaveError]     = useState<string | null>(null);
+  const [numberOfSpeakers, setNumberOfSpeakers] = useState(2);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +50,7 @@ export default function DetailsPage({ audioMeta, onSubmit }: DetailsPageProps) {
             attendees,
             context: context || null,
             meeting_date: meetingDate || null,
+            number_of_speakers: numberOfSpeakers,
           }),
         });
         if (!res.ok) {
@@ -55,7 +58,7 @@ export default function DetailsPage({ audioMeta, onSubmit }: DetailsPageProps) {
           throw new Error(err);
         }
       }
-      onSubmit({ attendees, context, meetingDate });
+      onSubmit({ attendees, context, meetingDate, numberOfSpeakers });
     } catch (err) {
       console.error('Failed to save meeting details:', err);
       setSaveError('Could not save details — please try again.');
@@ -145,6 +148,23 @@ export default function DetailsPage({ audioMeta, onSubmit }: DetailsPageProps) {
                 ↺ Now
               </button>
             </div>
+          </div>
+
+          <div className="field">
+            <label className="field-label" htmlFor="numberOfSpeakers">
+              Number of Speakers <span className="field-required">*</span>
+            </label>
+            <p className="field-hint">How many distinct speakers were in the meeting?</p>
+            <input
+              id="numberOfSpeakers"
+              type="number"
+              className="field-input"
+              min={1}
+              max={20}
+              value={numberOfSpeakers}
+              onChange={e => setNumberOfSpeakers(Math.max(1, parseInt(e.target.value) || 1))}
+              required
+            />
           </div>
 
           {saveError && (

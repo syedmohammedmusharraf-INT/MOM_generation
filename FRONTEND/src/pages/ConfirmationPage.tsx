@@ -8,8 +8,8 @@ interface ConfirmationPageProps {
 export default function ConfirmationPage({ details, onHome }: ConfirmationPageProps) {
   const displayDate = details.meetingDate
     ? new Date(details.meetingDate).toLocaleString('en-IN', {
-        dateStyle: 'long', timeStyle: 'short'
-      })
+      dateStyle: 'long', timeStyle: 'short'
+    })
     : '—';
 
   return (
@@ -44,6 +44,10 @@ export default function ConfirmationPage({ details, onHome }: ConfirmationPagePr
           <div className="confirm-meta-item">
             <span className="confirm-meta-label">Meeting Date</span>
             <span className="confirm-meta-value">{displayDate}</span>
+          </div>
+          <div className="confirm-meta-item">
+            <span className="confirm-meta-label">Speakers</span>
+            <span className="confirm-meta-value">{details.numberOfSpeakers}</span>
           </div>
         </div>
 

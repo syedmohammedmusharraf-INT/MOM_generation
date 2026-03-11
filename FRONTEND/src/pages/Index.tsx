@@ -21,7 +21,7 @@ export default function Index() {
       <header className="topbar">
         <a className="topbar-brand" href="#">
           <div className="topbar-logo">◎</div>
-          <span className="topbar-name">MoM-ai</span>
+          <span className="topbar-name">MeetMind-ai</span>
         </a>
 
         <div className="topbar-steps">
@@ -65,7 +65,7 @@ export default function Index() {
 
       {/* Footer */}
       <footer>
-        <span className="footer-text">© 2026 MoM-ai · All rights reserved</span>
+        <span className="footer-text">© 2026 MeetMind-ai · All rights reserved</span>
       </footer>
     </div>
   );
